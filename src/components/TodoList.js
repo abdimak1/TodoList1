@@ -1,46 +1,42 @@
-// TodoList.js
 import React, { useState } from 'react';
-import './TodoList.css'; 
+import './TodoList.css';
+function App() {
+  const [todoList, setTodoList] = useState([]);
+  const [newTask, setNewTask] = useState("");
 
-const TodoList = () => {
-  const [todos, setTodos] = useState([]);
-  const [task, setTask] = useState('');
-
-  const addTodo = () => {
-    if (task.trim() !== '') {
-      setTodos([...todos, task]);
-      setTask('');
-    }
+  const handleChange = (event) => {
+    setNewTask(event.target.value);
   };
 
-  const removeTodo = (index) => {
-    const updatedTodos = [...todos];
-    updatedTodos.splice(index, 1);
-    setTodos(updatedTodos);
+  const addTask = () => {
+    const task = {
+      id: todoList.length === 0 ? 1 : todoList[todoList.length - 1].id + 1,
+      taskName: newTask,
+    };
+    setTodoList([...todoList, task]);
+    //setNewTask("");
+  };
+
+  const deleteTask = (id) => {
+    setTodoList(todoList.filter((task) => task.id !== id));
   };
 
   return (
-    <div>
-      <h2>Todo List</h2>
-      <ul>
-        {todos.map((todo, index) => (
-          <li key={index}>
-            {todo}
-            <button onClick={() => removeTodo(index)}>Remove</button>
-          </li>
+    <div className='App'>
+      <div className='addTask'>
+        <input value={newTask} onChange={handleChange} />
+        <button onClick={addTask}> Add Task</button>
+      </div>
+      <div className='List'>
+        {todoList.map((task) => (
+          <div key={task.id}>
+            <h1>{task.taskName}</h1>
+            <button onClick={() => deleteTask(task.id)}>x</button>
+          </div>
         ))}
-      </ul>
-      <div>
-        <input
-          type="text"
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
-          placeholder="Add a new task"
-        />
-        <button onClick={addTodo}>Add Task</button>
       </div>
     </div>
   );
-};
+}
 
-export default TodoList;
+export default App;
